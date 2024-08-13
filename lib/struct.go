@@ -1,7 +1,7 @@
 package lib
 
-type Server struct {
-	Succes  bool
+type Response struct {
+	Success bool
 	Message string
 	Results interface{}
 }
