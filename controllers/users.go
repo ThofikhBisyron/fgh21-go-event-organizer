@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 
@@ -11,11 +11,44 @@ import (
 )
 
 func ListAllusers(r *gin.Context) {
-	results := models.FindAllusers()
+	search := r.Query("search")
+	page, _ := strconv.Atoi(r.Query("page"))
+	limit, _ := strconv.Atoi(r.Query("limit"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 5
+	}
+	if page > 1 {
+		limit = (page - 1) * limit
+	}
+	listUser, count := models.FindAllusers(search, limit, page)
+
+	totalPage := math.Ceil(float64(count) / float64(limit))
+	next := 0
+	prev := 0
+
+	if int(totalPage) > 1 {
+		next = int(totalPage) - page
+	}
+	if int(totalPage) > 1 {
+		prev = int(totalPage) - 1
+	}
+	totalInfo := lib.TotalInfo{
+		TotalData: count,
+		TotalPage: int(totalPage),
+		Page:      page,
+		Limit:     limit,
+		Next:      next,
+		Prev:      prev,
+	}
 	r.JSON(http.StatusOK, lib.Response{
-		Success: true,
-		Message: "List All User",
-		Results: results,
+		Success:     true,
+		Message:     "success",
+		ResultsInfo: totalInfo,
+		Results:     listUser,
 	})
 }
 
@@ -66,36 +99,32 @@ func Createusers(ctx *gin.Context) {
 }
 
 func Updateusers(ctx *gin.Context) {
-	param := ctx.Param("id")
-	id, _ := strconv.Atoi(param)
-	data := models.FindAllusers()
 
-	user := models.Users{}
-	err := ctx.Bind(&user)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	id := ctx.GetInt("userId")
 
-	result := models.Users{}
-	for _, v := range data {
-		if v.Id == id {
-			result = v
-		}
-	}
+	user := models.FindOneusers(id)
+	if user.Id == 0 {
 
-	if result.Id == 0 {
 		ctx.JSON(http.StatusNotFound, lib.Response{
 			Success: false,
-			Message: "user with id " + param + " not found",
+			Message: "User with ID not found",
 		})
 		return
 	}
-	models.Updateusers(user.Email, *user.Username, user.Password, param)
+
+	if err := ctx.ShouldBind(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid input data",
+		})
+		return
+	}
+
+	models.Updateusers(user.Email, *user.Username, user.Password, id)
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
-		Message: "user with id " + param + " Edit Success",
+		Message: "User with successfully updated",
 		Results: user,
 	})
 }
@@ -128,6 +157,82 @@ func Deleteusers(ctx *gin.Context) {
 	})
 
 }
+
+func UpdatePassword(ctx *gin.Context) {
+	id := ctx.GetInt("userId")
+	user := models.FindOneusers(id)
+
+	if user.Id == 0 {
+		ctx.JSON(http.StatusNotFound, lib.Response{
+			Success: false,
+			Message: "User not found",
+		})
+		return
+	}
+
+	var req struct {
+		Password string `form:"password" binding:"required,min=8"`
+	}
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid input data",
+		})
+		return
+	}
+
+	if err := models.Updatepassword(req.Password, id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, lib.Response{
+			Success: false,
+			Message: "Failed to update password",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "Password successfully updated",
+	})
+}
+
+// func CreateUserAndProfile(ctx *gin.Context) {
+// 	newUser := models.Users{}
+// 	newProfile := models.Profile{}
+
+// 	if err := ctx.ShouldBind(&newUser); err != nil {
+// 		ctx.JSON(http.StatusBadRequest, lib.Response{
+// 			Success: false,
+// 			Message: "Invalid user input data",
+// 		})
+// 		return
+// 	}
+
+// 	if err := ctx.ShouldBind(&newProfile); err != nil {
+// 		ctx.JSON(http.StatusBadRequest, lib.Response{
+// 			Success: false,
+// 			Message: "Invalid profile input data",
+// 		})
+// 		return
+// 	}
+
+// 	err := models.CreateUserAndprofile(newUser, newProfile)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusInternalServerError, lib.Response{
+// 			Success: false,
+// 			Message: "Failed to create user and profile",
+// 		})
+// 		return
+// 	}
+
+// 	ctx.JSON(http.StatusOK, lib.Response{
+// 		Success: true,
+// 		Message: "User and profile created successfully",
+// 		Results: gin.H{
+// 			"user":    newUser,
+// 			"profile": newProfile,
+// 		},
+// 	})
+// }
 
 // func Detailusers(r *gin.Context) {
 // 	id, _ := strconv.Atoi(r.Param("id"))

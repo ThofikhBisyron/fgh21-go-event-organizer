@@ -3,19 +3,20 @@ package models
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/lib"
 	"github.com/jackc/pgx/v5"
 )
 
 type Events struct {
-	Id          int     `json:"id"`
-	Image       *string `json:"image" form:"image" db:"image"`
-	Tittle      *string `json:"tittle" form:"tittle" db:"tittle"`
-	Date        *int    `json:"date" form:"date" db:"date"`
-	Description *string `json:"description" form:"description" db:"description"`
-	Location    *int    `json:"location" form:"location" db:"location"`
-	Created_by  int     `json:"created_by" form:"created_by" db:"created_by"`
+	Id          int       `json:"id"`
+	Image       *string   `json:"image" form:"image" db:"image"`
+	Tittle      *string   `json:"tittle" form:"tittle" db:"tittle"`
+	Date        time.Time `json:"date" form:"date" db:"date"`
+	Description *string   `json:"description" form:"description" db:"description"`
+	Location    *int      `json:"location" form:"location" db:"location"`
+	Created_by  *int      `json:"created_by" form:"created_by" db:"created_by"`
 }
 
 func FindAllevents() []Events {
@@ -67,7 +68,7 @@ func CreateEvents(event Events, id int) error {
 
 	return nil
 }
-func Updateevents(image string, tittle string, date int, description string, location int, created_by int, id string) error {
+func Updateevents(image string, tittle string, date time.Time, description string, location int, created_by int, id string) error {
 
 	db := lib.Db()
 	defer db.Close(context.Background())

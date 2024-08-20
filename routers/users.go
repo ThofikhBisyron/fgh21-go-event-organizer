@@ -13,5 +13,7 @@ func useRouter(routersGroup *gin.RouterGroup) {
 	routersGroup.POST("/", controllers.Createusers)
 	routersGroup.PATCH("/:id", controllers.Updateusers)
 	routersGroup.DELETE("/:id", controllers.Deleteusers)
+	routersGroup.PATCH("/password", controllers.UpdatePassword)
+	routersGroup.PATCH("/profile", controllers.UpdatePassword)
 
 }

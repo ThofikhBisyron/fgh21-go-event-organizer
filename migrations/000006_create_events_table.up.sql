@@ -7,3 +7,4 @@ create table "events" (
 	"location" int references "locations"("id"),
     "created_by" int references "users"("id")
 );
+

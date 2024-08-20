@@ -31,7 +31,9 @@ func DetailEvents(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, lib.Response{
 			Success: false,
 			Message: "Events Not Found",
-			Results: data,
+			Results: gin.H{
+				"result": data,
+			},
 		})
 	}
 
@@ -56,7 +58,7 @@ func Createevents(ctx *gin.Context) {
 		})
 		return
 	}
-	newEvents.Created_by = id.(int)
+	newEvents.Created_by = id.(*int)
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
 		Message: "Event created successfully",
@@ -102,7 +104,7 @@ func UpdateEvents(ctx *gin.Context) {
 		return
 	}
 
-	err = models.Updateevents(*event.Image, *event.Tittle, *event.Date, *event.Description, *event.Location, event.Created_by, param)
+	err = models.Updateevents(*event.Image, *event.Tittle, event.Date, *event.Description, *event.Location, *event.Created_by, param)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,

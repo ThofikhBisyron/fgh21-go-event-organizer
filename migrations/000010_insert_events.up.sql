@@ -1,0 +1,12 @@
+insert into "events" ("tittle", "date", "description", "image") 
+values 
+('Sosialisasi KKN Tahun 2021', '2021-04-30 08:00:00', 'Sosialisasi membahas tentang KKN 2021', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSipjmSlnCasEMmjhOSmATLKTcYLB8puyb5kQ&s'),
+('Pelatihan Kepimpinan dan Manajemen Tim', '2023-06-20 08:00:00', 'Mengembangkan kemampuan dan keterampilan kepimpinan dan manajemen tim yang efektif', 'https://marketplace.canva.com/EAFj5qPlGQw/1/0/1600w/canva-hijau-putih-oranye-modern-spanduk-acara-seminar-JQIMxO7jyk8.jpg'),
+('Seminar Bedah buku', '2021-06-20 08:00:00', 'Menghasilkan keuntungan maksimal dengan strategi pemasaran digital', 'https://marketplace.canva.com/EAFhu0y8Hz0/2/0/1600w/canva-ungu-keren-kekinian-ilustrasi-acara-seminar-bisnis-spanduk-B-fvigLSAw4.jpg'),
+('Pekan Gembira Ria', '2024-05-11 08:00:00', 'Saksikan penampilan PGRVOL 7', 'https://storage.jakarta-tourism.go.id/public/events/wK9mQES6vwV1KUIcYsWR915Dy70k2R-metaU25hcGluc3RhLmFwcF80NDAzNDgxMjBfMTUwMDYyMzkwNzUzOTgzM185MjA2ODk4NjA4ODUyMjU2ODZfbl8xMDgwLmpwZw==-.jpg'),
+('Digital Festival Edisi Kemerdekaan', '2023-07-12 08:00:00', 'Festival Edisi Kemerdekaan', 'https://www.tangerangkota.go.id/files/berita/36293konser-musik-sampai-atraksi-kembang-api-ramaikan-tangerang-digital-festival-2023-362932.jpeg'),
+('Mahakarya Nusantara', '2024-05-22 08:00:00', 'konser musik ungu', 'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/207/2024/05/12/1715501132150-picsay-3590501569.jpg'),
+('EXPERTISE FOR THE FUTURE', '2022-9-22 08:00:00','Festival Keahlian untuk masa depan', 'https://studio.mrngroup.co/storage/app/media/Prambors/Editorial%203/Plaza%20Indonesia-20230523162341.webp?tr=w-600'),
+('HWAITING SIPA', '2023-07-20 06:30:00', 'Solo International Perfoming Arts 2023', 'https://lh4.googleusercontent.com/SUhINN7UCD6qff1uIxa2ublh9n_uiC-7GE24SNigPEP1HIIQlgkMACFXDuRuzeTNajPj8K5JNVQ8ow3gMLmOK0U_YhyvHLxS8zBF_5mwNvVJIQZsP9sRNlF5owmKJRrT2mgaIN3wsDEijBIFfL42gg=s16000'),
+('Rawa Pening Perfoming Art and 2024 Festival', '2021-06-27 09:00:00', 'Larungan sesaji sedekah rawa, atraksi kesenian,', 'https://visitjawatengah.jatengprov.go.id/assets/images/b27a5f2d-3e95-418f-879b-49e3a2ad78ca.jpg'),
+('Acara Puncak 19th Environmental Fair', '2021-06-18 17:00:00', 'Himpunan Mahasiswa Jurusan Teknik Lingkungan Universitas Trisakti', 'https://i0.wp.com/eventpelajar.com/wp-content/uploads/2021/06/IMG-20210616-WA0026.jpg?fit=1280%2C1280&ssl=1');

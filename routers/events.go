@@ -7,11 +7,13 @@ import (
 )
 
 func useRouterEvents(routersGroup *gin.RouterGroup) {
-	routersGroup.Use(middlewares.AddMiddleWares())
 	routersGroup.GET("/", controllers.ListAllevents)
 	routersGroup.GET("/:id", controllers.DetailEvents)
+	routersGroup.GET("/section/:id", controllers.FindSectionByEventId)
+	routersGroup.Use(middlewares.AddMiddleWares())
 	routersGroup.POST("/", controllers.Createevents)
 	routersGroup.PATCH("/:id", controllers.UpdateEvents)
 	routersGroup.DELETE("/:id", controllers.Deleteevent)
+	routersGroup.GET("/payment_method", controllers.FindAllPayment)
 
 }

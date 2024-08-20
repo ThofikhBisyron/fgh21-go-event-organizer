@@ -7,4 +7,8 @@ func RouterCombine(r *gin.Engine) {
 	AuthRouter(r.Group("/auth"))
 	useRouterProfile(r.Group("/profile"))
 	useRouterEvents(r.Group("/events"))
+	useRouterCategories(r.Group("/categories"))
+	useRouterTransactions(r.Group("/transactions"))
+	AuthRouterpartners(r.Group("/partners"))
+
 }

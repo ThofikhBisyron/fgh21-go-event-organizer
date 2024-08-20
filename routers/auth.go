@@ -8,4 +8,5 @@ import (
 func AuthRouter(routerGroup *gin.RouterGroup) {
 	routerGroup.POST("/login", controllers.AuthLogin)
 	routerGroup.POST("/register", controllers.Createprofile)
+
 }

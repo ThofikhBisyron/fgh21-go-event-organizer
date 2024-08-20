@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/lib"
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/models"
@@ -18,22 +17,18 @@ func ListAllProfile(r *gin.Context) {
 	})
 }
 func DetailusersProfile(ctx *gin.Context) {
-	id, _ := strconv.Atoi(ctx.Param("id"))
+	id := ctx.GetInt("userId")
 	data := models.FindProfileByIdUser(id)
+	datap := models.FindOneusers(id)
 
-	if data.Id != 0 {
-		ctx.JSON(http.StatusOK, lib.Response{
-			Success: true,
-			Message: "Profile Found",
-			Results: data,
-		})
-	} else {
-		ctx.JSON(http.StatusNotFound, lib.Response{
-			Success: false,
-			Message: "Profile Not Found",
-			Results: data,
-		})
-	}
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "Profile Found",
+		Results: gin.H{
+			"profile": data,
+			"user":    datap,
+		},
+	})
 
 }
 func Createprofile(ctx *gin.Context) {
@@ -58,6 +53,70 @@ func Createprofile(ctx *gin.Context) {
 			},
 		})
 
+}
+func CreateUserandProfile(ctx *gin.Context) {
+	var newUser models.Users
+	if err := ctx.ShouldBind(&newUser); err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid input data",
+		})
+		return
+	}
+
+	userId, err := models.CreateUserprofile(newUser)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, lib.Response{
+			Success: false,
+			Message: "Failed to create user",
+		})
+		return
+	}
+
+	tokenUserId := ctx.GetInt("userId")
+
+	if tokenUserId != userId {
+		ctx.JSON(http.StatusUnauthorized, lib.Response{
+			Success: false,
+			Message: "Unauthorized",
+		})
+		return
+	}
+
+	var newProfile models.Profile
+	if err := ctx.ShouldBind(&newProfile); err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid profile data",
+		})
+		return
+	}
+
+	newProfile.User_id = userId
+
+	err = models.CreateProfileuser(newProfile)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, lib.Response{
+			Success: false,
+			Message: "Failed to create profile",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "User and profile created successfully",
+		Results: newUser,
+	})
+}
+
+func ListAllProfileNationalities(r *gin.Context) {
+	results := models.FindAllprofilenationalities()
+	r.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "List All Nationalities",
+		Results: results,
+	})
 }
 
 // newProfile := models.Profile{}

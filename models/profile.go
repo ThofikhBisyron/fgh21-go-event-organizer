@@ -8,6 +8,10 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+type Nationalities struct {
+	Id   int    `json:"id"`
+	Name string `json:"name" form:"name" db:"name"`
+}
 type JoinRegist struct {
 	Id       int    `json:"id"`
 	Email    string `json:"email" form:"email" db:"email"`
@@ -40,24 +44,23 @@ func FindAllProfile() []Profile {
 	}
 	return profile
 }
-func FindProfileByIdUser(id int) Profile {
+func FindProfileByIdUser(id int) []Profile {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
 	rows, _ := db.Query(context.Background(),
-		`select * from "profile"`,
+		`select * from "profile" where "user_id" = $1`, id,
 	)
 	profile, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Profile])
+	fmt.Println(err)
 	if err != nil {
+
 		fmt.Println(err)
+
 	}
-	dataprofile := Profile{}
-	for _, v := range profile {
-		if v.Id == id {
-			dataprofile = v
-		}
-	}
-	return dataprofile
+	fmt.Println(profile)
+
+	return profile
 }
 
 func CreateProfile(joinRegist JoinRegist) (*Profile, error) {
@@ -98,4 +101,36 @@ func CreateProfile(joinRegist JoinRegist) (*Profile, error) {
 	}
 
 	return &profile, nil
+}
+func CreateProfileuser(profile Profile) error {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	_, err := db.Exec(
+		context.Background(),
+		`INSERT INTO profile (picture, full_name, birth_date, gender, phone_number, profession, nationality_id, user_id) 
+		 VALUES ('$1', '$2', '$3', '%4', '$5', '$6', '$7', '$8')`,
+		profile.Picture, profile.Full_name, profile.Birth_date, profile.Gender, profile.Phone_number,
+		profile.Profession, profile.Nationality_id, profile.User_id,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to execute insert: %v", err)
+	}
+
+	return nil
+}
+
+func FindAllprofilenationalities() []Nationalities {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	rows, _ := db.Query(context.Background(),
+		`select * from "nationalities" order by "id" asc`,
+	)
+	national, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Nationalities])
+	if err != nil {
+		fmt.Println(err)
+	}
+	return national
 }
