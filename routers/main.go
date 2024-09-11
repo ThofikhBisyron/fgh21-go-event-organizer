@@ -9,6 +9,8 @@ func RouterCombine(r *gin.Engine) {
 	useRouterEvents(r.Group("/events"))
 	useRouterCategories(r.Group("/categories"))
 	useRouterTransactions(r.Group("/transactions"))
+	useRouterWishlist(r.Group("/wishlist"))
+	useRouterLocations(r.Group("/locations"))
 	AuthRouterpartners(r.Group("/partners"))
 
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -39,10 +40,10 @@ func DetailEvents(ctx *gin.Context) {
 
 }
 func Createevents(ctx *gin.Context) {
-	newEvents := models.Events{}
-	id, _ := ctx.Get("userId")
+	var newEvent models.Events
+	id := ctx.GetInt("userId")
 
-	if err := ctx.ShouldBind(&newEvents); err != nil {
+	if err := ctx.ShouldBind(&newEvent); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
 			Message: "Invalid input data",
@@ -50,19 +51,19 @@ func Createevents(ctx *gin.Context) {
 		return
 	}
 
-	err := models.CreateEvents(newEvents, id.(int))
+	err := models.CreateEvents(newEvent, id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
-			Message: "Failed to create Profile",
+			Message: "Failed to create event",
 		})
 		return
 	}
-	newEvents.Created_by = id.(*int)
+
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
 		Message: "Event created successfully",
-		Results: newEvents,
+		Results: newEvent,
 	})
 }
 func UpdateEvents(ctx *gin.Context) {
@@ -104,7 +105,7 @@ func UpdateEvents(ctx *gin.Context) {
 		return
 	}
 
-	err = models.Updateevents(*event.Image, *event.Tittle, event.Date, *event.Description, *event.Location, *event.Created_by, param)
+	err = models.Updateevents(*event.Image, *event.Tittle, *event.Date, *event.Description, *event.Location, *event.Created_by, param)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
@@ -144,5 +145,25 @@ func Deleteevent(ctx *gin.Context) {
 		Success: true,
 		Message: "Events deleted successfully",
 		Results: dataUser,
+	})
+}
+
+func FindEventByUserId(ctx *gin.Context) {
+	id := ctx.GetInt("userId")
+	result, err := models.FindeventbyUserId(id)
+	fmt.Println(result)
+
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, lib.Response{
+			Success: false,
+			Message: "Event Created By User Is Not Found ",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "Event Created By User Is Found",
+		Results: result,
 	})
 }

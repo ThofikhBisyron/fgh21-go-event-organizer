@@ -1,11 +1,3 @@
-create table "locations"(
-	"id" serial primary key,
-	"name" varchar(80),
-	"lat" varchar(80),
-    "long" varchar(255),
-	"image" varchar(255)
-);
-
 INSERT INTO "locations" ("name","lat","long","image") VALUES
 ('Dieng','-7.2167','109.906090','https://images.pexels.com/photos/2835562/pexels-photo-2835562.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
 ('Jakarta',' -6.200000','106.816666','https://images.pexels.com/photos/3441726/pexels-photo-3441726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),

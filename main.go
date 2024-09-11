@@ -7,6 +7,7 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.Static("/img/profile", "./img/profile")
 	r.Use(corsMiddleware())
 	routers.RouterCombine(r)
 	r.Run("localhost:8080")

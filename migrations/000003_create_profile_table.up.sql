@@ -2,7 +2,7 @@ create table "profile" (
 	"id" serial primary key,
 	"picture" varchar(255),
 	"full_name" varchar(80),
-	"birth_date" date,
+	"birth_date" varchar(50),
 	"gender" smallint,
 	"phone_number" varchar(15),
 	"profession" varchar(80),

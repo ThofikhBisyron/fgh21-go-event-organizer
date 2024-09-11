@@ -3,7 +3,6 @@ package models
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/lib"
 	"github.com/jackc/pgx/v5"
@@ -17,14 +16,24 @@ type Transaction struct {
 }
 
 type DetailTransaction struct {
-	Id                int       `json:"id"`
-	Full_name         string    `json:"full_name" form:"full_name" db:"full_name"`
-	Event_tittle      string    `json:"event_tittle" form:"event_tittle" db:"tittle"`
-	Location_id       *int      `json:"location_id" form:"location_id" db:"location"`
-	Date              time.Time `json:"date" form:"date" db:"date"`
-	Payment_method_id string    `json:"payment_method_id" form:"payment_method_id" db:"payment_method_id"`
-	Section_name      []string  `json:"section_name" form:"section_name" db:"name"`
-	Ticket_qty        []int     `json:"ticket_qty" form:"ticket_qty" db:"ticket_qty"`
+	Id                int      `json:"id"`
+	Full_name         string   `json:"full_name" form:"full_name" db:"full_name"`
+	Event_tittle      string   `json:"event_tittle" form:"event_tittle" db:"tittle"`
+	Location_id       *int     `json:"location_id" form:"location_id" db:"location"`
+	Date              *string  `json:"date" form:"date" db:"date"`
+	Payment_method_id string   `json:"payment_method_id" form:"payment_method_id" db:"payment_method_id"`
+	Section_name      []string `json:"section_name" form:"section_name" db:"section_name"`
+	Ticket_qty        []int    `json:"ticket_qty" form:"ticket_qty" db:"ticket_qty"`
+}
+type JoinTransactionUser struct {
+	Id           int     `json:"id"`
+	Event_id     int     `json:"event_id" form:"event_id" db:"event_id"`
+	Image        string  `json:"image" form:"image" db:"image"`
+	Event_tittle string  `json:"event_tittle" form:"event_tittle" db:"tittle"`
+	Location     *string `json:"location" form:"location" db:"name"`
+	Description  *string `json:"description" form:"description" db:"description"`
+	Date         *string `json:"date" form:"date" db:"date"`
+	User_id      int     `json:"user_id" form:"user_id" db:"user_id"`
 }
 
 func CreateNewTransactions(data Transaction) Transaction {
@@ -84,4 +93,38 @@ func Findtransaction(user_id int) ([]Transaction, error) {
 		fmt.Println(err)
 	}
 	return transaction, nil
+}
+
+func FindtransactionByuserId(id int) ([]JoinTransactionUser, error) {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	sql, _ := db.Query(context.Background(),
+		`
+		SELECT 
+		transactions.id,
+		events.id,
+		events.image,
+		events.tittle,
+		locations.name,
+		events.description,
+		events."date",
+		transactions.user_id
+		FROM
+		transactions
+		JOIN
+		events ON transactions.event_id = events.id
+		JOIN
+		locations ON events.location = locations.id
+		WHERE
+		user_id = $1`, id,
+	)
+
+	jointrx, err := pgx.CollectRows(sql, pgx.RowToStructByPos[JoinTransactionUser])
+
+	if err != nil {
+		return []JoinTransactionUser{}, err
+	}
+	return jointrx, nil
+
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -54,7 +55,6 @@ func CreateTransaction(ctx *gin.Context) {
 		"message": "Success Create Transaction",
 		"results": details,
 	})
-	return
 
 }
 
@@ -92,5 +92,25 @@ func FindTransactionByEventId(ctx *gin.Context) {
 		Message: "Transaction Found",
 		Results: data,
 	})
+
+}
+func FindTransactionByUserId(ctx *gin.Context) {
+	id := ctx.GetInt("userId")
+	fmt.Println((id))
+	result, err := models.FindtransactionByuserId(id)
+
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, lib.Response{
+			Success: false,
+			Message: "Transaction User Not Found",
+		})
+		return
+	} else {
+		ctx.JSON(http.StatusOK, lib.Response{
+			Success: true,
+			Message: "Transaction User Found",
+			Results: result,
+		})
+	}
 
 }

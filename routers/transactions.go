@@ -11,4 +11,5 @@ func useRouterTransactions(routersGroup *gin.RouterGroup) {
 	routersGroup.POST("/", controllers.CreateTransaction)
 	routersGroup.GET("/", controllers.ListDetailsTransactions)
 	routersGroup.GET("/:id", controllers.FindTransactionByEventId)
+	routersGroup.GET("/user", controllers.FindTransactionByUserId)
 }

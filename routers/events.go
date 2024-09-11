@@ -15,5 +15,7 @@ func useRouterEvents(routersGroup *gin.RouterGroup) {
 	routersGroup.PATCH("/:id", controllers.UpdateEvents)
 	routersGroup.DELETE("/:id", controllers.Deleteevent)
 	routersGroup.GET("/payment_method", controllers.FindAllPayment)
+	routersGroup.GET("/wishlist", controllers.DetailWishlist)
+	routersGroup.GET("/created", controllers.FindEventByUserId)
 
 }
