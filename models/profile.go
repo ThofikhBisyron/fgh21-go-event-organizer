@@ -155,21 +155,20 @@ func UpdateProfile(userID int, joinUsers JoinUsers, profile Profile) error {
 
 	updateProfileQuery := `
 		UPDATE "profile" 
-		SET "picture" = $1, 
-		    "full_name" = $2, 
-		    "birth_date" = $3, 
-		    "gender" = $4, 
-		    "phone_number" = $5, 
-		    "profession" = $6, 
-		    "nationality_id" = $7 
-		WHERE "user_id" = $8
+		SET
+		    "full_name" = $1, 
+		    "birth_date" = $2, 
+		    "gender" = $3, 
+		    "phone_number" = $4, 
+		    "profession" = $5, 
+		    "nationality_id" = $6 
+		WHERE "user_id" = $7
 		RETURNING id;
 	`
 	var updatedProfileID int
 	err = db.QueryRow(
 		context.Background(),
 		updateProfileQuery,
-		profile.Picture,
 		profile.Full_name,
 		profile.Birth_date,
 		profile.Gender,

@@ -21,7 +21,7 @@ func FindAlllocation() []Location {
 	defer db.Close(context.Background())
 
 	rows, _ := db.Query(context.Background(),
-		`select * from locations`,
+		`select * from locations order by "id" asc`,
 	)
 
 	location, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Location])
