@@ -11,7 +11,9 @@ import (
 )
 
 func ListAllevents(r *gin.Context) {
-	results := models.FindAllevents()
+	search := r.Query("search")
+
+	results := models.FindAllevents(search)
 	r.JSON(http.StatusOK, lib.Response{
 		Success: true,
 		Message: "List All Events",
@@ -69,6 +71,8 @@ func Createevents(ctx *gin.Context) {
 func UpdateEvents(ctx *gin.Context) {
 	param := ctx.Param("id")
 	id, err := strconv.Atoi(param)
+	search := ctx.Query("search")
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
@@ -77,7 +81,7 @@ func UpdateEvents(ctx *gin.Context) {
 		return
 	}
 
-	data := models.FindAllevents()
+	data := models.FindAllevents(search)
 
 	event := models.Events{}
 	err = ctx.Bind(&event)

@@ -12,6 +12,19 @@ type Categories struct {
 	Id   int    `json:"id"`
 	Name string `json:"name" form:"name" db:"name"`
 }
+type Event_Categories struct {
+	Id          int    `json:"id"`
+	Category_id int    `json:"category_id" db:"id"`
+	Name        string `json:"name" db:"name"`
+	Image       string `json:"image" db:"image"`
+	Date        string `json:"date" db:"date"`
+	Tittle      string `json:"tittle" db:"tittle"`
+}
+type Insert_Categories struct {
+	Id          int `json:"id"`
+	Event_id    int `json:"event_id" db:"event_id" form:"event_id"`
+	Category_id int `json:"category_id" db:"event_id" form:"category_id"`
+}
 
 func FindAllCategories(search string, page int, limit int) ([]Categories, int) {
 	db := lib.Db()
@@ -61,14 +74,14 @@ func FindOnecategories(id int) Categories {
 	}
 	return categorie
 }
-func CreateCategories(categories Categories) error {
+func CreateEventcategories(insertCategories Insert_Categories) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
 	_, err := db.Exec(
 		context.Background(),
-		`insert into "categories" (name) values ($1)`,
-		categories.Name,
+		`insert into event_categories ("event_id", "category_id") values ($1, $2)`,
+		insertCategories.Event_id, insertCategories.Category_id,
 	)
 
 	if err != nil {
@@ -105,4 +118,37 @@ func DeleteCategories(id int) error {
 	}
 
 	return nil
+}
+func Findevent_categories(id int, page int, limit int) []Event_Categories {
+	db := lib.Db()
+	defer db.Close(context.Background())
+	offset := (page - 1) * limit
+
+	sql := `SELECT 
+			events.id,
+			categories.id AS category_id,
+			categories.name,
+			events.image,
+			events."date",
+			events.tittle
+			FROM
+			event_categories
+			JOIN 
+			events ON event_categories.event_id = events.id
+			JOIN
+			categories ON event_categories.category_id = categories.id
+			WHERE 
+			category_id = $1
+			ORDER BY event_categories asc
+			OFFSET $2 LIMIT $3`
+
+	rows, _ := db.Query(context.Background(), sql, id, offset, limit)
+	e_categories, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Event_Categories])
+
+	fmt.Println(e_categories)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return e_categories
 }

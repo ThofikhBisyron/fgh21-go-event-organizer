@@ -9,8 +9,9 @@ func useRouterCategories(routersGroup *gin.RouterGroup) {
 	// routersGroup.Use(middlewares.AddMiddleWares())
 	routersGroup.GET("/", controllers.ListAllCategories)
 	routersGroup.GET("/:id", controllers.Detailcategories)
-	routersGroup.POST("/", controllers.Createcategories)
+	routersGroup.POST("/", controllers.CreateEventCategories)
 	routersGroup.PATCH("/:id", controllers.Updatecategories)
 	routersGroup.DELETE("/:id", controllers.Deletecategories)
+	routersGroup.GET("/events/", controllers.FindEvent_Categories)
 
 }

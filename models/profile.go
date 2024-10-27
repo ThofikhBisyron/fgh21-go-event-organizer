@@ -37,6 +37,17 @@ type Profile struct {
 	User_id        int     `json:"user_id" form:"user_id" db:"user_id"`
 }
 
+type ProfileNoPicture struct {
+	Id             int     `json:"id"`
+	Full_name      string  `json:"full_name" form:"full_name" db:"full_name"`
+	Birth_date     *string `json:"birth_date" form:"birth_date" db:"birth_date"`
+	Gender         *int    `json:"gender" form:"gender" db:"gender"`
+	Phone_number   *string `json:"phone_number" form:"phone_number" db:"phone_number"`
+	Profession     *string `json:"profession" form:"profession" db:"profession"`
+	Nationality_id *int    `json:"nationality_id" form:"nationality_id" db:"natinality_id"`
+	User_id        int     `json:"user_id" form:"user_id" db:"user_id"`
+}
+
 type Picture struct {
 	Picture *string `json:"picture" form:"picture" db:"picture"`
 	User_id int     `json:"user_id" form:"user_id" db:"user_id"`
@@ -127,7 +138,7 @@ func FindAllprofilenationalities() []Nationalities {
 	}
 	return national
 }
-func UpdateProfile(userID int, joinUsers JoinUsers, profile Profile) error {
+func UpdateProfile(userID int, joinUsers JoinUsers, profile ProfileNoPicture) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
@@ -191,7 +202,7 @@ func UpdateProfileImage(data Picture, id int) (Picture, error) {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
-	sql := `UPDATE profile SET "picture" = $1 WHERE user_id=$2 returning *`
+	sql := `UPDATE profile SET "picture" = $1 WHERE user_id=$2 returning picture, user_id`
 
 	row, err := db.Query(context.Background(), sql, data.Picture, id)
 	if err != nil {

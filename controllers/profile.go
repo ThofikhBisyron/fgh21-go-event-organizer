@@ -74,7 +74,7 @@ func UpdateUserAndProfile(ctx *gin.Context) {
 	userId := ctx.GetInt("userId")
 
 	var joinUsers models.JoinUsers
-	var profile models.Profile
+	var profile models.ProfileNoPicture
 
 	if err := ctx.ShouldBind(&joinUsers); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
@@ -179,7 +179,7 @@ func UploadProfileImage(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, lib.Response{
-		Success: false,
+		Success: true,
 		Message: "Upload Success",
 		Results: gin.H{
 			"profile": profile,

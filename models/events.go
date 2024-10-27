@@ -28,12 +28,14 @@ type JoinEvents struct {
 	Created_by  *int    `json:"created_by" form:"created_by" db:"created_by"`
 }
 
-func FindAllevents() []Events {
+func FindAllevents(search string) []Events {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
+	fmt.Println("Search query parameter:", search)
+
 	rows, _ := db.Query(context.Background(),
-		`select * from "events" order by "id" asc`,
+		`select * from "events" where "tittle" ilike '%' || $1 || '%' order by "id" asc`, search,
 	)
 
 	events, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Events])

@@ -15,15 +15,6 @@ func ListAllCategories(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
 	limit, _ := strconv.Atoi(c.Query("limit"))
 
-	if page < 1 {
-		page = 1
-	}
-	if limit < 1 {
-		limit = 5
-	}
-	if page > 1 {
-		page = (page - 1) * limit
-	}
 	listEvent, count := models.FindAllCategories(search, page, limit)
 
 	totalPage := math.Ceil(float64(count) / float64(limit))
@@ -70,8 +61,8 @@ func Detailcategories(ctx *gin.Context) {
 	}
 
 }
-func Createcategories(ctx *gin.Context) {
-	newCategories := models.Categories{}
+func CreateEventCategories(ctx *gin.Context) {
+	newCategories := models.Insert_Categories{}
 
 	if err := ctx.ShouldBind(&newCategories); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
@@ -81,18 +72,18 @@ func Createcategories(ctx *gin.Context) {
 		return
 	}
 
-	err := models.CreateCategories(newCategories)
+	err := models.CreateEventcategories(newCategories)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
-			Message: "Failed to create user",
+			Message: "Failed to insert categories",
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
-		Message: "Categories created successfully",
+		Message: "Categories inserted successfully",
 		Results: newCategories,
 	})
 }
@@ -155,4 +146,17 @@ func Deletecategories(ctx *gin.Context) {
 		Results: dataCategories,
 	})
 
+}
+func FindEvent_Categories(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Query("id"))
+	page, _ := strconv.Atoi(ctx.Query("page"))
+	limit, _ := strconv.Atoi(ctx.Query("limit"))
+
+	listcategory := models.Findevent_categories(id, page, limit)
+
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "List Event Category",
+		Results: listcategory,
+	})
 }
