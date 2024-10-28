@@ -33,20 +33,19 @@ func FindSectionbyeventId(event_id int) ([]Event_sections, error) {
 	return event_section, nil
 }
 
-func CreateEventsection(EventSection Event_sections) error {
+func CreateEventsection(EventSection *Event_sections) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
 	query := `INSERT INTO event_sections ("name", "price", "quantity", "event_id") values ($1, $2, $3, $4) RETURNING id`
 
-	EventSectionID := 0
 	err := db.QueryRow(
 		context.Background(),
 		query,
 		EventSection.Name,
 		EventSection.Price,
 		EventSection.Quantity,
-		EventSection.Event_id).Scan(&EventSectionID)
+		EventSection.Event_id).Scan(&EventSection.Id)
 
 	println(err)
 	if err != nil {

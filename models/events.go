@@ -63,15 +63,14 @@ func FindOneevents(id int) Events {
 	}
 	return event
 }
-func CreateEvents(event Events, id int) error {
+func CreateEvents(event *Events, id int) (int, error) {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
 	query := `
 		INSERT INTO events (image, tittle, date, description, location, created_by)
 		VALUES ($1, $2, $3, $4, $5, $6)
-		RETURNING id
-	`
+		RETURNING id`
 
 	var eventID int
 	err := db.QueryRow(
@@ -86,10 +85,10 @@ func CreateEvents(event Events, id int) error {
 	).Scan(&eventID)
 	println(err)
 	if err != nil {
-		return fmt.Errorf("failed to insert event: %w", err)
+		return 0, fmt.Errorf("failed to insert event: %w", err)
 	}
 
-	return nil
+	return eventID, nil
 }
 func Updateevents(image string, tittle string, date string, description string, location int, created_by int, id string) error {
 

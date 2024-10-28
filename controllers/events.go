@@ -53,7 +53,7 @@ func Createevents(ctx *gin.Context) {
 		return
 	}
 
-	err := models.CreateEvents(newEvent, id)
+	eventID, err := models.CreateEvents(&newEvent, id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
@@ -61,6 +61,8 @@ func Createevents(ctx *gin.Context) {
 		})
 		return
 	}
+
+	newEvent.Id = eventID
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,

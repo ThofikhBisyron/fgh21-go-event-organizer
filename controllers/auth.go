@@ -18,7 +18,7 @@ func AuthLogin(ctx *gin.Context) {
 	if err := ctx.Bind(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
-			Message: "Invalid request",
+			Message: "Wrong email and password",
 		})
 		return
 	}

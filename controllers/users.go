@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -171,7 +172,8 @@ func UpdatePassword(ctx *gin.Context) {
 	}
 
 	var req struct {
-		Password string `form:"password" binding:"required,min=8"`
+		OldPassword string `form:"oldpassword" binding:"required"`
+		NewPassword string `form:"password" binding:"required,min=8"`
 	}
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
@@ -181,7 +183,18 @@ func UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	if err := models.Updatepassword(req.Password, id); err != nil {
+	fmt.Println("Old password from request:", req.OldPassword)
+	fmt.Println("Hashed password from database:", user.Password)
+
+	if !lib.CheckPassword(user.Password, req.OldPassword) {
+		ctx.JSON(http.StatusUnauthorized, lib.Response{
+			Success: false,
+			Message: "Old password is incorrect",
+		})
+		return
+	}
+
+	if err := models.Updatepassword(req.NewPassword, id); err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
 			Message: "Failed to update password",

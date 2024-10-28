@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -31,33 +30,52 @@ func FindSectionByEventId(ctx *gin.Context) {
 }
 
 func CreateEventSection(ctx *gin.Context) {
-	NewEventSection := []models.Event_sections{}
-	fmt.Println(NewEventSection)
+	names := ctx.PostFormArray("name")
+	prices := ctx.PostFormArray("price")
+	quantities := ctx.PostFormArray("quantity")
+	EventIdStr := ctx.PostForm("event_id")
 
-	if err := ctx.ShouldBind(&NewEventSection); err != nil {
-		fmt.Println("Error in binding JSON:", err)
+	if len(names) != len(prices) || len(names) != len(quantities) || EventIdStr == "" {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
 			Message: "invalid input data",
 		})
-		return
 	}
 
-	for _, section := range NewEventSection {
-		err := models.CreateEventsection(section)
-		if err != nil {
+	eventID, err := strconv.Atoi(EventIdStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid Event ID",
+		})
+	}
+
+	newSection := []models.Event_sections{}
+
+	for i := range names {
+		price, _ := strconv.Atoi(prices[i])
+		quantity, _ := strconv.Atoi(quantities[i])
+
+		section := &models.Event_sections{
+			Name:     names[i],
+			Price:    price,
+			Quantity: quantity,
+			Event_id: eventID,
+		}
+		if err := models.CreateEventsection(section); err != nil {
 			ctx.JSON(http.StatusInternalServerError, lib.Response{
 				Success: false,
-				Message: "failed to create event sections",
+				Message: "Failed to create event sections",
 			})
 			return
 		}
+		newSection = append(newSection, *section)
 	}
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
 		Message: "Event Sections Created Successfully",
-		Results: NewEventSection,
+		Results: newSection,
 	})
 
 }

@@ -143,6 +143,7 @@ func Updatepassword(password string, id int) error {
 
 	return nil
 }
+
 func CreateUserAndprofile(user Users, profile Profile) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
