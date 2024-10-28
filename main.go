@@ -1,11 +1,17 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/lib"
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/routers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	password := "12345678"
+	hashedPassword := lib.Encrypt(password)
+	fmt.Println("Hashed password:", hashedPassword)
 	r := gin.Default()
 	r.Static("/img/profile", "./img/profile")
 	r.Use(corsMiddleware())

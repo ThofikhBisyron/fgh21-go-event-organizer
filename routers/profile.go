@@ -12,9 +12,5 @@ func useRouterProfile(routersGroup *gin.RouterGroup) {
 	routersGroup.GET("/", controllers.DetailusersProfile)
 	routersGroup.PATCH("/update", controllers.UpdateUserAndProfile)
 	routersGroup.PATCH("/", controllers.UploadProfileImage)
-	// routersGroup.GET("/", controllers.ListAllProfile)
-	// routersGroup.POST("/", controllers.Createprofile)
-	// routersGroup.PATCH("/:id", controllers.Updateusers)
-	// routersGroup.DELETE("/:id", controllers.Deleteusers)
 
 }

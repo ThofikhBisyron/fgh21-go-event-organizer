@@ -13,6 +13,7 @@ type Users struct {
 	Username *string `json:"username" form:"username"`
 	Email    string  `json:"email" form:"email" binding:"required,email"`
 	Password string  `json:"-" form:"password" binding:"required,min=8" db:"password"`
+	Role_id  int     `json:"role_id" form:"role_id" db:"role_id"`
 }
 
 func FindAllusers(search string, limit int, page int) ([]Users, int) {

@@ -16,6 +16,7 @@ type JoinRegist struct {
 	Id       int    `json:"id"`
 	Email    string `json:"email" form:"email" db:"email"`
 	Password string `json:"-" form:"password" db:"password"`
+	Role_id  int    `json:"role_id" form:"role_id" db:"role_id"`
 	Results  Profile
 }
 
@@ -90,12 +91,13 @@ func CreateProfile(joinRegist JoinRegist) (*Profile, error) {
 	defer db.Close(context.Background())
 
 	joinRegist.Password = lib.Encrypt(joinRegist.Password)
+	joinRegist.Role_id = 1
 
 	var userId int
 	err := db.QueryRow(
 		context.Background(),
-		`INSERT INTO "users" ("email", "password") VALUES ($1, $2) RETURNING "id"`,
-		joinRegist.Email, joinRegist.Password,
+		`INSERT INTO "users" ("email", "password", "role_id") VALUES ($1, $2, $3) RETURNING "id"`,
+		joinRegist.Email, joinRegist.Password, joinRegist.Role_id,
 	).Scan(&userId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to insert into users table: %v", err)
