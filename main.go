@@ -16,7 +16,7 @@ func main() {
 	r.Static("/img/profile", "./img/profile")
 	r.Use(corsMiddleware())
 	routers.RouterCombine(r)
-	r.Run("0.0.0.0:8080")
+	r.Run("103.93.58.89:8080")
 }
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
