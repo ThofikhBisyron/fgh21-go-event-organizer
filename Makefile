@@ -1,7 +1,7 @@
 host ?= 103.93.58.89
 port ?= 54324
 user ?= postgres
-pass ?= 1
+pass ?= 12345678
 db ?= event_organizer
 
 migrate\:init:
