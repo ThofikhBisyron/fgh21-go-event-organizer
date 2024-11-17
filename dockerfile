@@ -10,6 +10,4 @@ RUN go build -o backend
 
 EXPOSE 8080
 
-RUN make migrate:reset
-
 ENTRYPOINT ["/app/backend"]
