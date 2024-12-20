@@ -1,4 +1,4 @@
-FROM golang:1.23.0 AS builder
+FROM golang:1.23.0-slim AS builder
 
 WORKDIR /app
 
@@ -8,9 +8,9 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o backend
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o backend
 
-FROM gcr.io/distroless/base-debian10
+FROM gcr.io/distroless/static:nonroot
 
 COPY --from=builder /app/backend /app/backend
 
