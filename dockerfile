@@ -1,5 +1,4 @@
-# Stage 1: Build Stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 RUN apk add --no-cache gcc musl-dev
 
@@ -19,6 +18,7 @@ COPY --from=builder /app/backend /app/backend
 EXPOSE 8080
 
 ENTRYPOINT ["/app/backend"]
+
 
 
 # Normal
