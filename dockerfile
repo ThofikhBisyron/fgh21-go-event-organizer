@@ -20,7 +20,6 @@ EXPOSE 8080
 ENTRYPOINT ["/app/backend"]
 
 
-
 # Normal
 # FROM golang:1.23.0
 
