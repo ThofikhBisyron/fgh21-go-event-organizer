@@ -7,4 +7,5 @@ import (
 
 func useRouterEventSection(routersGroup *gin.RouterGroup) {
 	routersGroup.POST("/", controllers.CreateEventSection)
+	routersGroup.PATCH("/", controllers.UpdateSection)
 }

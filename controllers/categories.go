@@ -89,20 +89,18 @@ func CreateEventCategories(ctx *gin.Context) {
 }
 
 func Updatecategories(ctx *gin.Context) {
-
-	param := ctx.Param("id")
-	id, _ := strconv.Atoi(param)
-
-	categorie := models.FindOnecategories(id)
-	if categorie.Id == 0 {
-		ctx.JSON(http.StatusNotFound, lib.Response{
+	param := ctx.Param("event_id")
+	eventID, err := strconv.Atoi(param)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
-			Message: "Categories with ID " + param + " not found",
+			Message: "Invalid event_id parameter",
 		})
 		return
 	}
 
-	if err := ctx.ShouldBind(&categorie); err != nil {
+	var input models.Insert_Categories
+	if err := ctx.ShouldBind(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, lib.Response{
 			Success: false,
 			Message: "Invalid input data",
@@ -110,12 +108,25 @@ func Updatecategories(ctx *gin.Context) {
 		return
 	}
 
-	models.UpdateCategories(categorie.Name, id)
+	if input.Category_id == 0 {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "category_id is required",
+		})
+		return
+	}
+
+	if err := models.UpdateCategoriesByEventID(eventID, input.Category_id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, lib.Response{
+			Success: false,
+			Message: "Failed to update category for event_id",
+		})
+		return
+	}
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
-		Message: "categories with ID " + param + " successfully updated",
-		Results: categorie,
+		Message: "Category for event_id successfully updated",
 	})
 }
 

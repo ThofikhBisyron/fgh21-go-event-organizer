@@ -91,14 +91,15 @@ func CreateEventcategories(insertCategories Insert_Categories) error {
 	return nil
 }
 
-func UpdateCategories(name string, id int) {
+func UpdateCategoriesByEventID(eventID int, categoryID int) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
 
-	dataSql := `update "categories" set (name) = ($1) where id=$2`
-
-	db.Exec(context.Background(), dataSql, name, id)
+	query := `UPDATE "event_categories" SET "category_id" = $1 WHERE "event_id" = $2`
+	_, err := db.Exec(context.Background(), query, categoryID, eventID)
+	return err
 }
+
 func DeleteCategories(id int) error {
 	db := lib.Db()
 	defer db.Close(context.Background())
@@ -151,4 +152,20 @@ func Findevent_categories(id int, page int, limit int) []Event_Categories {
 		fmt.Println(err)
 	}
 	return e_categories
+}
+
+func DeleteCategoriesByEventID(eventID int) error {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	_, err := db.Exec(
+		context.Background(),
+		`DELETE FROM "event_categories" WHERE event_id = $1`,
+		eventID,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete categories: %v", err)
+	}
+	return nil
 }

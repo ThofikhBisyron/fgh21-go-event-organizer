@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/lib"
 	"github.com/ThofikhBisyron/fgh21-react-go-event-organizer/models"
@@ -78,14 +79,45 @@ func GetUserEventDetails(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, lib.Response{
 			Success: false,
-			Message: "Gagal mengambil detail event: " + err.Error(),
+			Message: "Failed to retrieve event details:" + err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, lib.Response{
 		Success: true,
-		Message: "Detail event berhasil diambil",
+		Message: "Event details successfully retrieved",
 		Results: eventDetails,
+	})
+}
+
+func DeleteWishlist(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	user_id := ctx.GetInt("userId")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, lib.Response{
+			Success: false,
+			Message: "Invalid Event ID",
+		})
+		return
+	}
+
+	wishlist := models.FindOnewishlistbyId(id)
+
+	err = models.Deletewishlist(id, user_id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, lib.Response{
+			Success: false,
+			Message: "Failed to delete wishlist",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, lib.Response{
+		Success: true,
+		Message: "Wishlist deleted successfully",
+		Results: wishlist,
 	})
 }

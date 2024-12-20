@@ -1,6 +1,6 @@
 INSERT INTO "users" ("username", "email", "password", "role_id") 
 VALUES 
-('Admin Super User', 'admin@mail.com', '$argon2id$v=19$m=65536,t=3,p=4$svXPb18xktWQ+TPiI07TvA$L2WaPgRhLUl3HpI1nFkwhjN7mavJ0Uv2ZG6bpRkgnAI', '2')
+('Admin Super User', 'admin@mail.com', '$argon2id$v=19$m=65536,t=3,p=4$mJf+Cbj814Y+uvGR33vwYw$5C1OmZwsJgIN+bsqhw2savxVG4fSflW4i7Yonxt4GfA', '2')
 RETURNING id;
 
 

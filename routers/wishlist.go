@@ -11,5 +11,6 @@ func useRouterWishlist(routerGroup *gin.RouterGroup) {
 	routerGroup.GET("/", controllers.DetailWishlist)
 	routerGroup.POST("/", controllers.CreateWishlist)
 	routerGroup.GET("/findevent", controllers.GetUserEventDetails)
+	routerGroup.DELETE("/:id", controllers.DeleteWishlist)
 
 }

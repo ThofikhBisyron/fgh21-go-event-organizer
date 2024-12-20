@@ -14,8 +14,12 @@ func main() {
 	fmt.Println("Hashed password:", hashedPassword)
 	r := gin.Default()
 	r.Static("/img/profile", "./img/profile")
+	r.Static("/img/events", "./img/events")
 	r.Use(corsMiddleware())
 	routers.RouterCombine(r)
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./frontend/build/index.html")
+	})
 	r.Run("0.0.0.0:8080")
 }
 func corsMiddleware() gin.HandlerFunc {

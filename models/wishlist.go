@@ -15,7 +15,7 @@ type Wishlist struct {
 }
 
 type EventDetail struct {
-	WishlistID  int    `json:"wishlist_id"`
+	Id          int    `json:"id"`
 	EventID     int    `json:"event_id"`
 	Tittle      string `json:"tittle"`
 	Description string `json:"description"`
@@ -78,7 +78,7 @@ func GetEventDetailsByUserID(userID int) ([]EventDetail, error) {
 
 	query := `
         SELECT 
-            w.id as wishlist_id, 
+			w.id as id,
             e.id as event_id, 
             e.tittle, 
             e.description, 
@@ -102,11 +102,53 @@ func GetEventDetailsByUserID(userID int) ([]EventDetail, error) {
 	var eventDetails []EventDetail
 	for rows.Next() {
 		var detail EventDetail
-		if err := rows.Scan(&detail.WishlistID, &detail.EventID, &detail.Tittle, &detail.Description, &detail.Date, &detail.Image, &detail.Location); err != nil {
+		if err := rows.Scan(&detail.Id, &detail.EventID, &detail.Tittle, &detail.Description, &detail.Date, &detail.Image, &detail.Location); err != nil {
 			return nil, fmt.Errorf("gagal membaca data event: %v", err)
 		}
 		eventDetails = append(eventDetails, detail)
 	}
 
 	return eventDetails, nil
+}
+
+func Deletewishlist(id, userID int) error {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	result, err := db.Exec(
+		context.Background(),
+		`DELETE FROM "wishlist" WHERE id = $1 AND user_id = $2`,
+		id, userID,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete wishlist: %v", err)
+	}
+
+	rowsAffected := result.RowsAffected()
+	if rowsAffected == 0 {
+		return fmt.Errorf("wishlist with id %d not found or does not belong to user %d", id, userID)
+	}
+
+	return nil
+}
+func FindOnewishlistbyId(id int) Wishlist {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	rows, err := db.Query(context.Background(), `SELECT * FROM "wishlist" WHERE id = $1`, id)
+	if err != nil {
+		fmt.Println("Error querying database:", err)
+	}
+
+	var wishlist Wishlist
+	if rows.Next() {
+		if err := rows.Scan(&wishlist.Id, &wishlist.User_id, &wishlist.Event_id); err != nil {
+			fmt.Println("Error scanning row:", err)
+		}
+	}
+
+	fmt.Println("Wishlist ditemukan:", wishlist)
+
+	return wishlist
 }

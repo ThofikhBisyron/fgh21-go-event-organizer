@@ -159,3 +159,32 @@ func FindeventbyUserId(id int) ([]JoinEvents, error) {
 
 	return eventId, err
 }
+
+func FindEventByID(id int) (*Events, error) {
+	db := lib.Db()
+	defer db.Close(context.Background())
+
+	query := `
+		SELECT id, image, tittle, date, description, location, created_by
+		FROM events
+		WHERE id = $1`
+
+	var event Events
+	err := db.QueryRow(context.Background(), query, id).Scan(
+		&event.Id,
+		&event.Image,
+		&event.Tittle,
+		&event.Date,
+		&event.Description,
+		&event.Location,
+		&event.Created_by,
+	)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("failed to find event: %v", err)
+	}
+
+	return &event, nil
+}
