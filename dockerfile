@@ -1,9 +1,11 @@
-FROM golang:1.23.0-slim AS builder
+# Stage 1: Build Stage
+FROM golang:1.21-alpine AS builder
+
+RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
-
 RUN go mod tidy
 
 COPY . .
