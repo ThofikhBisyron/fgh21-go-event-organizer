@@ -237,7 +237,7 @@ func UpdateEvents(ctx *gin.Context) {
 			return
 		}
 
-		imageURL = "http://localhost:8080/img/events/" + newFileName
+		imageURL = "http://http://103.93.58.89:21214/img/events/" + newFileName
 
 		if existingEvent.Image != nil && *existingEvent.Image != "" {
 			oldImagePath := "./img/events/" + filepath.Base(*existingEvent.Image)
