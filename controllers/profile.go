@@ -161,7 +161,7 @@ func UploadProfileImage(c *gin.Context) {
 		return
 	}
 
-	tes := "http://103.93.58.89:21214/img/profile/" + newFile
+	tes := "http://159.65.11.166:21214/img/profile/" + newFile
 
 	delImgBefore := models.FindProfileByIdUser(id)
 	if delImgBefore.Picture != nil {
