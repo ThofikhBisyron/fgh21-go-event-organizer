@@ -9,7 +9,7 @@ import (
 
 func Db() *pgx.Conn {
 	conn, err := pgx.Connect(context.Background(),
-		"postgresql://postgres:1@31.56.56.74:54324/event_organizer?sslmode=disable",
+		"postgresql://postgres:1@172.17.0.2:5432/event_organizer?sslmode=disable",
 	)
 
 	if err != nil {

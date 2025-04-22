@@ -1,5 +1,5 @@
-host ?= 31.56.56.74
-port ?= 54324
+host ?= 172.17.0.2
+port ?= 5432
 user ?= postgres
 pass ?= 1
 db ?= event_organizer

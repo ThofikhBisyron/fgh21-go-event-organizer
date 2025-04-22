@@ -15,7 +15,7 @@ FROM gcr.io/distroless/static:nonroot
 
 COPY --from=builder /app/backend /app/backend
 
-EXPOSE 8080
+EXPOSE 8888
 
 ENTRYPOINT ["/app/backend"]
 

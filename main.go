@@ -20,7 +20,7 @@ func main() {
 	r.NoRoute(func(c *gin.Context) {
 		c.File("./frontend/build/index.html")
 	})
-	r.Run("0.0.0.0:8080")
+	r.Run("0.0.0.0:8888")
 }
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {

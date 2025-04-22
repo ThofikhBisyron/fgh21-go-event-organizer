@@ -122,7 +122,7 @@ func UploadProfileImage(c *gin.Context) {
 		if err.Error() == "http: request body too large" {
 			c.JSON(http.StatusInternalServerError, lib.Response{
 				Success: false,
-				Message: "file size too large, max capacity 500 kb",
+				Message: "file size too large, max capacity 2 MB",
 			})
 			return
 		}
@@ -161,11 +161,11 @@ func UploadProfileImage(c *gin.Context) {
 		return
 	}
 
-	tes := "http://159.65.11.166:21214/img/profile/" + newFile
+	tes := "http://localhost:8888/img/profile/" + newFile
 
 	delImgBefore := models.FindProfileByIdUser(id)
 	if delImgBefore.Picture != nil {
-		fileDel := strings.Split(*delImgBefore.Picture, "8080")[1]
+		fileDel := strings.Split(*delImgBefore.Picture, "8888")[1]
 		os.Remove("." + fileDel)
 	}
 
