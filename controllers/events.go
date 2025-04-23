@@ -126,7 +126,7 @@ func Createevents(ctx *gin.Context) {
 		return
 	}
 
-	imageURL := "http://157.230.243.8:10001img/events/" + newFileName
+	imageURL := "http://157.230.243.8:10001/img/events/" + newFileName
 	newEvent.Image = &imageURL
 
 	eventID, err := models.CreateEvents(&newEvent, id)
@@ -237,7 +237,7 @@ func UpdateEvents(ctx *gin.Context) {
 			return
 		}
 
-		imageURL = "http://157.230.243.8:10001img/events/" + newFileName
+		imageURL = "http://157.230.243.8:10001/img/events/" + newFileName
 
 		if existingEvent.Image != nil && *existingEvent.Image != "" {
 			oldImagePath := "./img/events/" + filepath.Base(*existingEvent.Image)
