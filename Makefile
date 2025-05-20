@@ -7,10 +7,10 @@
 include .env
 
 migrate\:init:
-PGPASSWORD=$(DB_PASSWORD) psql -U$(DB_USER) -d postgres -h $(DB_HOST) -p $(DB_PORT) -c "create database $(DB_NAME);"
+	PGPASSWORD=$(DB_PASSWORD) psql -U$(DB_USER) -d postgres -h $(DB_HOST) -p $(DB_PORT) -c "create database $(DB_NAME);"
 
 migrate\:drop:
-PGPASSWORD=$(DB_PASSWORD) psql -U$(DB_USER) -d postgres -h $(DB_HOST) -p $(DB_PORT) -c "drop database if exists $(DB_NAME) with (force);"
+	PGPASSWORD=$(DB_PASSWORD) psql -U$(DB_USER) -d postgres -h $(DB_HOST) -p $(DB_PORT) -c "drop database if exists $(DB_NAME) with (force);"
 
 migrate\:up:
 	migrate -database postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable -path migrations up $(version)
