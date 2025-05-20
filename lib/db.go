@@ -8,8 +8,9 @@ import (
 )
 
 func Db() *pgx.Conn {
+	cfg := LoadConfig()
 	conn, err := pgx.Connect(context.Background(),
-		"postgresql://postgres:1@143.198.222.47:54321/event_organizer?sslmode=disable",
+		"postgresql://"+cfg.DBUser+":"+cfg.DBPassword+"@"+cfg.DBHost+":"+cfg.DBPort+"/"+cfg.DBName+"?sslmode=disable",
 	)
 
 	if err != nil {
