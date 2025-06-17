@@ -34,3 +34,4 @@ ENTRYPOINT ["/app/backend"]
 # EXPOSE 8080
 
 # ENTRYPOINT ["/app/backend"]
+# docker run --env-file .env --name eventbe -p 10001:8888 -d eventbe
